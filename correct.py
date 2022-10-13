@@ -39,6 +39,7 @@ def draw_subplot(i,titlename,x,y):
 data1=read('./temp_csv.txt')
 #data2: dlnA
 data2=read('./temp_kernel.txt')
+print(data2)
 #print(data1[0])
 #print(data2[0])
 
@@ -48,7 +49,8 @@ for i in range(len(data1)):
             #print(data1[i][0])
             data1[i].append(data2[j][1])
             continue
-print(data1)
+for t in data1:
+    print(t)
 dist=[]
 dist_norad=[]
 depmax=[]

@@ -3,7 +3,7 @@ program main
     integer:: imax_v, imax_k
     common imax_v,imax_k
 
-    character *70 :: file_velocity, file_kernel,out_kernel
+    character *70 :: file_velocity, file_kernel,out_kernel,out_dlnA
     integer::   stat
     real::  slo,sla,rlo,rla,dist,dlnA
     real,allocatable:: velocity(:,:),kernel(:,:)
@@ -16,26 +16,31 @@ program main
     ! arealamin=21
     ! delta_arc=0.5
 
-    if (1>2) then
+    !if(1>2)then
     write(*,*) 'please input velocity file name'
     read(*,*) file_velocity
     write(*,*) 'please input kernel file name'
     read(*,*) file_kernel
-    write(*,*) 'please input kernel rotated ouf file name'
-    read(*,*) out_kernel
+    ! write(*,*) 'please input kernel rotated ouf file name'
+    ! read(*,*) out_kernel
     write(*,*) 'please input slo,sla,rlo,rla,dist'
     read(*,*) slo,sla,rlo,rla,dist
-    end if
-
-    file_velocity='f_0.1950.phvel.txt'
-    file_kernel='A.53059.kernel'
-    out_kernel='out_kernel_test'
-    slo=102.493
-    sla=28.9926
-    rlo=100.596
-    rla=26.2944
-    dist=352.735
+    out_dlnA=file_kernel(1:17)//'.dlnA.txt'
+    out_kernel=file_kernel//'_rotate'
+ !   end if
+!   =========test========
+    ! str=file_kernel(1:17)//'.dlnA.txt'
+    ! file_velocity='f_0.1950.phvel.txt'
+    ! file_kernel='A.53059.kernel'
+    ! out_kernel='out_kernel_test'
+    ! slo=102.493
+    ! sla=28.9926
+    ! rlo=100.596
+    ! rla=26.2944
+    ! dist=352.735
+!   =======================
     !计算文件的行数，并生成所需大小的数组
+    write(*,*)slo,sla,rlo,rla,dist,file_kernel,file_velocity
     call count_row(file_velocity,imax_v)
     call count_row(file_kernel,imax_k)    
     allocate(velocity(imax_v,3))
@@ -54,6 +59,11 @@ program main
     close(10)
     !将kernel和phvel相乘相加
     call plus(kernel,velocity,dlnA)
+    
+    open(unit=10,file=out_dlnA)
+    write(10,*)file_kernel,dlnA
+    close(10)
+    !filein "+kernel_filein+"\trotate theta: "+str(math.degrees(theta))+"\tdlnA= "+str(    dlnA)
     call cpu_time(t2)
     write(*,*)'cpu time:',t2-t1
 end program main
